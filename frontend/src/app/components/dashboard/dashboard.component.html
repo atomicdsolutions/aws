@@ -1,0 +1,28 @@
+<div class="wrapper">
+  <div class="row" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+    <h1> {{ client }} </h1>
+  </div>
+  <div class="row">
+    <div class="dialog-box" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+      <!-- Used and Remaining at the top -->
+
+      <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="10px" fxFlex>
+        <div fxFlex="50%" fxFlex.lt-md="100%">
+          <h3>Used</h3>
+          <p>{{ lastUsed }}</p>
+        </div>
+        <div fxFlex="50%" fxFlex.lt-md="100%">
+          <h3>Remaining</h3>
+          <p>{{ lastRemaining }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!-- Charts below -->
+    <div class="chart-container" fxFlex>
+      <canvas id="barChart"></canvas>
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+</div>

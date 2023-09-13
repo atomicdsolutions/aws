@@ -1,0 +1,30 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+    // align-items: center;
+    // min-height: 100vh; /* Full viewport height */
+    overflow-x: auto; /* Horizontal scrolling if needed */
+  }
+  
+  .responsive-table {
+    width: 100%; /* Full width */
+    max-width: 800px; /* Maximum width */
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+  }
+  
+  .responsive-table th,
+  .responsive-table td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Add responsiveness for smaller screens */
+  @media screen and (max-width: 600px) {
+    .responsive-table th,
+    .responsive-table td {
+      display: block;
+    }
+  }
+  

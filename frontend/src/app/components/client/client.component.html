@@ -1,0 +1,80 @@
+<mat-card>
+  <mat-card-title>Manage Clients</mat-card-title>
+  <mat-card-content>
+    <!-- Selection between Input and CSV Upload -->
+    <div>
+      <button mat-button (click)="showInput = true; showCSV = false">Manual Input</button>
+      <button mat-button (click)="showCSV = true; showInput = false">CSV Upload</button>
+    </div>
+
+    <!-- Manual Input -->
+    <div *ngIf="showInput">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput id="name" [(ngModel)]="client.name" placeholder="Enter client name" name="name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>API KEY</mat-label>
+        <input matInput [(ngModel)]="client.apikey" placeholder="Enter client API KEY">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Usage Plan ID</mat-label>
+        <input matInput [(ngModel)]="client.usagePlanId" placeholder="Enter client Usage Plan ID">
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="addClient()">Add</button>
+    </div>
+
+    <!-- CSV Upload -->
+    <div *ngIf="showCSV">
+      <mat-form-field>
+        <mat-label>Upload Clients via CSV</mat-label>
+        <input matInput placeholder="Choose a file..." [value]="fileToUpload?.name" readonly>
+        <input type="file" style="display:none" #fileInput (change)="handleFileInput($event)">
+        <button mat-button (click)="fileInput.click()">Choose File</button>
+        <button mat-raised-button color="accent" (click)="addClientsFromCSV()">Upload CSV</button>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-form-field>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
+</mat-form-field>
+<mat-table [dataSource]="dataSource">
+
+  <!-- Client Name Column -->
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>Client Name</mat-header-cell>
+    <mat-cell *matCellDef="let client">{{ client.name }}</mat-cell>
+  </ng-container>
+
+  <!-- Current Usage Column -->
+  <ng-container matColumnDef="currentUsage">
+    <mat-header-cell *matHeaderCellDef>Current Usage</mat-header-cell>
+    <mat-cell *matCellDef="let client">{{ client.currentUsage }}</mat-cell>
+  </ng-container>
+
+  <!-- Remaining Usage Column -->
+  <ng-container matColumnDef="remainingUsage">
+    <mat-header-cell *matHeaderCellDef>Remaining Usage</mat-header-cell>
+    <mat-cell *matCellDef="let client">{{ client.remainingUsage }}</mat-cell>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="action">
+    <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+    <mat-cell *matCellDef="let client">
+      <button mat-button (click)="getUsageById(client)">Get Usage</button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="['name', 'currentUsage', 'remainingUsage', 'action']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['name', 'currentUsage', 'remainingUsage', 'action'];"></mat-row>
+
+</mat-table>
+<!-- Pagination -->
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

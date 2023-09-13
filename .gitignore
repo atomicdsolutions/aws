@@ -1,0 +1,13 @@
+.DS_Store
+backend/.DS_Store
+frontend/.DS_Store
+backend/.env
+frontend/.angular
+
+backend/node_modules
+frontend/node_modules
+
+backend/signers.py
+backend/*.log
+
+client.csv
