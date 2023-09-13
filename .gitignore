@@ -11,3 +11,5 @@ backend/signers.py
 backend/*.log
 
 client.csv
+
+.gitignore
