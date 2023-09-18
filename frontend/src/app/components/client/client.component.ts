@@ -182,4 +182,24 @@ export class ClientComponent implements OnInit {
       });
     });
   }
+  getPreviousMonthUsageById(client: Client) {
+    // Call your service or API to get the previous month's usage details for the given client ID
+    this.ags.getPreviousMonthUsage(client).subscribe((usage: any) => {
+      if (!Array.isArray(usage.data)) {
+        console.error('Expected usage to be an array, but got:', usage);
+        return;
+      }
+      console.log(usage.data);
+      const previousMonthUsageData = usage.data;
+  
+      // Open the dialog to show the data
+      this.dialog.open(DashboardComponent, {
+        width: '800px',
+        height: '600px',
+        data: { name: client.name, chartData: previousMonthUsageData }
+      });
+    });
+  }
+  
+  
 }

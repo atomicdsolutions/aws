@@ -19,6 +19,9 @@ export class ApiGatewayService {
   getUsage(client: Client): Observable<any> {
     return this.http.post(`${this.baseUrl}/get-usage`, client );
   }
+  getPreviousMonthUsage(client: Client): Observable<any> {
+    return this.http.post(`${this.baseUrl}/get-previous-month-usage`, client );
+  }
   getApiKeys(): Observable<any> {
     return this.http.get(`${this.baseUrl}/get-api-keys`);
   }

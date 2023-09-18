@@ -146,3 +146,42 @@ exports.getApiKeys = (req, res) => {
   });
 
 };
+
+// Function to get the previous month's usage
+exports.getPreviousMonthUsage = (req, res) => {
+  try {
+    const apikey = req.body.apikey;
+    const usagePlanId = req.body.usagePlanId;
+    console.log(req.body);
+    if (!apikey || !usagePlanId) {
+      return res.status(400).send('Both apikey and usagePlanId are required in the request body');
+    }
+
+    const currentDate = new Date();
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+    const startDate = firstDay.toISOString().split('T')[0];
+    const endDate = lastDay.toISOString().split('T')[0];
+
+    const params = {
+      usagePlanId: usagePlanId,
+      keyId: apikey,
+      startDate: startDate,
+      endDate: endDate,
+      limit: 1000
+    };
+
+    const apigateway = createApiGateway();
+    apigateway.getUsage(params, (err, usageData) => {
+      if (err) {
+        console.log('Error retrieving previous month usage data:', err.message);
+        return res.status(500).send('Error retrieving previous month usage data');
+      } else {
+        const usagePlanItems = usageData.items[params.keyId];
+        return res.json({ data: usagePlanItems });
+      }
+    });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};

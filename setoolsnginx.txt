@@ -1,0 +1,125 @@
+solutions
+
+upstream backend {
+      server 127.0.0.1:3000;
+    }
+# Default server configuration
+#
+server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
+	include snippets/self-signed.conf;
+   	include snippets/ssl-params.conf;
+
+	root /data/solutions;
+
+	# Add index.php to the list if you are using PHP
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+	location / {
+		proxy_pass http://localhost:8888;
+        	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        	proxy_set_header Host $http_host;
+		auth_basic "Restricted";
+		auth_basic_user_file /etc/nginx/.htpasswd;
+   		proxy_read_timeout 300;
+   		proxy_connect_timeout 300;
+   		proxy_send_timeout 300; 
+	}
+
+    # Node Service SECHECK Backend urls
+    location ~ ^/(admin|api|media) {
+      #  proxy_redirect off;
+        proxy_pass http://backend;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+    }
+  
+}
+
+old setools# Default server configuration
+#
+
+#upstream backend {
+ #     server 127.0.0.1:3000;
+  #  }
+server {
+       listen 8443 ssl;
+	   listen [::]:8443 ssl;
+	   include snippets/self-signed.conf;
+       include snippets/ssl-params.conf;       
+		
+		root /data/setools/setools;
+		
+        server_tokens off;		
+
+        location ~ /index.html|.*\.json$ {
+          expires -1;        
+          add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    #      include /etc/nginx/security-headers.conf;        
+        }
+
+        location ~ .*\.css$|.*\.js$ {               
+          add_header Cache-Control 'max-age=31449600'; # one year        
+        #  include /etc/nginx/security-headers.conf;        
+        }
+
+        location / {
+		  try_files $uri$args $uri$args/ /index.html;
+          #auth_basic "Restricted";
+		  #auth_basic_user_file /etc/nginx/.htpasswd;
+          add_header Cache-Control 'max-age=86400'; # one day
+        #  include /etc/nginx/security-headers.conf;       
+		}
+
+       # error_page   500 502 503 504  /50x.html;
+       # location = /50x.html {
+       #     root   /usr/share/nginx/html;
+       # }
+		
+		 # backend urls
+    #    location ~ ^/(admin|api|media) {
+     #       proxy_redirect off;
+      #      proxy_pass http://backend;
+       #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        #    proxy_set_header Host $http_host;
+        #}
+    }
+
+
+
+----------------------------------------------
+server {
+    listen 8443 ssl;
+    listen [::]:8443 ssl;
+    include snippets/self-signed.conf;
+    include snippets/ssl-params.conf;
+
+    server_tokens off;
+
+    # Common settings for both applications
+    location ~ /index.html|.*\.json$ {
+        expires -1;
+        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    }
+
+    location ~ .*\.css$|.*\.js$ {
+        add_header Cache-Control 'max-age=31449600'; # one year
+    }
+
+    # Location block for setools application
+    location ^~ /setools/ {
+        alias /data/setools/setools/;
+        try_files $uri$args $uri$args/ /setools/index.html;
+        add_header Cache-Control 'max-age=86400'; # one day
+    }
+
+    # Location block for aws application
+    location ^~ /aws/ {
+        alias /data/setools/aws/;
+        try_files $uri$args $uri$args/ /aws/index.html;
+        add_header Cache-Control 'max-age=86400'; # one day
+    }
+}

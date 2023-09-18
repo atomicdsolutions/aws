@@ -11,6 +11,7 @@ router.post('/get-usage', apigatewayController.getUsage);
 // apigatewayController.getUsage);
 router.post('/get-api-keys', apigatewayController.getApiKeys);
 
+router.post('/get-previous-month-usage', apigatewayController.getPreviousMonthUsage);
 //Mongoose Database Data
 const clients = require('../controler/clientControler'); // Make sure this path is correct
 

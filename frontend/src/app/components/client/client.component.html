@@ -72,8 +72,18 @@
     </mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="['name', 'currentUsage', 'remainingUsage', 'action']"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: ['name', 'currentUsage', 'remainingUsage', 'action'];"></mat-row>
+  <!-- Previous Month's Usage Column -->
+<ng-container matColumnDef="previousUsage">
+  <mat-header-cell *matHeaderCellDef>Previous Month's Usage</mat-header-cell>
+  <mat-cell *matCellDef="let client">
+    <button mat-button (click)="getPreviousMonthUsageById(client)">View</button>
+  </mat-cell>
+</ng-container>
+
+
+<mat-header-row *matHeaderRowDef="['name', 'currentUsage', 'remainingUsage', 'action', 'previousUsage']"></mat-header-row>
+<mat-row *matRowDef="let row; columns: ['name', 'currentUsage', 'remainingUsage', 'action', 'previousUsage'];"></mat-row>
+
 
 </mat-table>
 <!-- Pagination -->
